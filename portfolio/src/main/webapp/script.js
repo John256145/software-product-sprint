@@ -26,3 +26,39 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+function addMyGreeting() {
+  console.log('Fetching a greeting.');
+
+  // The fetch() function returns a Promise because the request is asynchronous.
+  const responsePromise = fetch('/data');
+
+  // When the request is complete, pass the response into handleResponse().
+  responsePromise.then(handleResponse);
+}
+
+/**
+ * Handles response by converting it to text and passing the result to
+ * addHelloToDom().
+ */
+function handleResponse(response) {
+  console.log('Handling the response.');
+
+  // response.text() returns a Promise, because the response is a stream of
+  // content and not a simple variable.
+  const textPromise = response.text();
+
+  // When the response is converted to text, pass the result into the
+  // addHelloToDom() function.
+  textPromise.then(addHelloToDom);
+}
+
+/** Adds my hello to the DOM. */
+function addHelloToDom(myhello) {
+  console.log('Adding hello to dom: ' + myhello);
+
+  const helloContainer = document.getElementById('my-greeting-container');
+  helloContainer.innerText = myhello;
+}
+
+
