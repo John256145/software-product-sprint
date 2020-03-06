@@ -19,14 +19,45 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import java.util.ArrayList;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
+    
+    
+
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("Hello Juan!");
+    ArrayList<String> jsonarray = new ArrayList<String>();
+    jsonarray.add("I love this site.");
+    jsonarray.add("This is so cool.");
+    jsonarray.add("All the cool kids are coding nowadays.");
+    // response.setContentType("text/html;");
+    // response.getWriter().println("Hello Juan!");
+
+    String json = convertToJson(jsonarray);
+    response.setContentType("application/json;");
+    response.getWriter().println(json);
+
   }
+
+
+  private String convertToJson(ArrayList<String> alist) {
+		String json = "{";
+		
+		for (int i=0; i<alist.size() - 1; i++) {
+			json += "\"comment" + i + "\": " + "\"" + alist.get(i) + "\"";
+			json += ", ";
+		}
+		
+		int lastidx = alist.size() - 1;
+		json += "\"comment" + lastidx + "\": " + alist.get(lastidx) + "\"";
+		json += "}";
+		return json;
+	}
+
+
+
 }
