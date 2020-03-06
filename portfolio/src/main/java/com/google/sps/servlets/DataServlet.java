@@ -23,30 +23,31 @@ import java.util.ArrayList;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-
-    
-    
-
+  ArrayList<String> commentsarray = new ArrayList<String>();
 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    ArrayList<String> jsonarray = new ArrayList<String>();
-    jsonarray.add("I love this site.");
-    jsonarray.add("This is so cool.");
-    jsonarray.add("All the cool kids are coding nowadays.");
-    // response.setContentType("text/html;");
-    // response.getWriter().println("Hello Juan!");
-
-    String json = convertToJson(jsonarray);
-    response.setContentType("application/json;");
-    response.getWriter().println(json);
-
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Get the input from the form.
+    String text = request.getParameter("text-input");
+    commentsarray.add(text);
+    response.sendRedirect("/");
   }
 
+
+  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String comments = convert(commentsarray);
+    response.setContentType("application/text;");
+    response.getWriter().println(comments);
+
+  }
 
   private String convertToJson(ArrayList<String> alist) {
 		String json = "{";
 		
+        if (alist.size() <= 0) {
+            return "";
+        }
+
 		for (int i=0; i<alist.size() - 1; i++) {
 			json += "\"comment" + i + "\": " + "\"" + alist.get(i) + "\"";
 			json += ", ";
@@ -56,6 +57,17 @@ public class DataServlet extends HttpServlet {
 		json += "\"comment" + lastidx + "\": " + alist.get(lastidx) + "\"";
 		json += "}";
 		return json;
+	}
+
+
+
+  public static String convert(ArrayList<String> alist) {
+		String s = "";
+		for(int i = 0; i<alist.size(); i++) {
+			s += alist.get(i);
+			s += "\n";
+		}
+		return s;
 	}
 
 
