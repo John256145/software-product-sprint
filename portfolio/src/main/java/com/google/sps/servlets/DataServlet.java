@@ -17,6 +17,9 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +29,7 @@ import java.util.ArrayList;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  ArrayList<String> commentsarray = new ArrayList<String>();
+  
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -34,7 +37,12 @@ public class DataServlet extends HttpServlet {
     String text = request.getParameter("text-input");
 
     Entity taskEntity = new Entity("Comments");
-    taskEntity.setProperty("Comment", text);
+    
+    if (text != ""){
+        //do not add a comment if it is empty
+        taskEntity.setProperty("Comment", text);
+    }
+
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(taskEntity);
 
@@ -44,6 +52,21 @@ public class DataServlet extends HttpServlet {
 
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    ArrayList<String> commentsarray = new ArrayList<String>();
+    Query query = new Query("Comments");
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+        String comment = (String) entity.getProperty("Comment");
+        
+        if (comment != ""){
+            commentsarray.add(comment);
+        }
+        
+        
+    }
+
     String comments = convert(commentsarray);
     response.setContentType("application/text;");
     response.getWriter().println(comments);
