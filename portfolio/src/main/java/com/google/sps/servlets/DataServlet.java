@@ -24,8 +24,8 @@ import java.util.ArrayList;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-    
-    
+
+
 
 
   @Override
@@ -34,8 +34,6 @@ public class DataServlet extends HttpServlet {
     jsonarray.add("I love this site.");
     jsonarray.add("This is so cool.");
     jsonarray.add("All the cool kids are coding nowadays.");
-    // response.setContentType("text/html;");
-    // response.getWriter().println("Hello Juan!");
 
     String json = convertToJson(jsonarray);
     response.setContentType("application/json;");
@@ -46,12 +44,12 @@ public class DataServlet extends HttpServlet {
 
   private String convertToJson(ArrayList<String> alist) {
 		String json = "{";
-		
+
 		for (int i=0; i<alist.size() - 1; i++) {
 			json += "\"comment" + i + "\": " + "\"" + alist.get(i) + "\"";
 			json += ", ";
 		}
-		
+
 		int lastidx = alist.size() - 1;
 		json += "\"comment" + lastidx + "\": " + alist.get(lastidx) + "\"";
 		json += "}";
