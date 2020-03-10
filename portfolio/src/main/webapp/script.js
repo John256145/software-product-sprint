@@ -57,6 +57,8 @@ function handleResponse(response) {
 function addHelloToDom(myhello) {
   console.log('Adding hello to dom: ' + myhello);
 
-  const helloContainer = document.getElementById('comments-container');
+  const helloContainer = document.getElementById('my-greeting-container');
   helloContainer.innerText = myhello;
 }
+
+
