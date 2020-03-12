@@ -13,7 +13,7 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
-
+import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -23,53 +23,33 @@ import java.util.ArrayList;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  ArrayList<String> commentsarray = new ArrayList<String>();
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
     String text = request.getParameter("text-input");
-    commentsarray.add(text);
+    // commentsarray.add(text);
     response.sendRedirect("/");
   }
 
-
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String comments = convert(commentsarray);
-    response.setContentType("application/text;");
-    response.getWriter().println(comments);
+    ArrayList<Comment> jsonArray = new ArrayList<Comment>();
+    Comment newComment1 = new Comment("I love this site.");
+    Comment newComment2 = new Comment("This is so cool.");
+    Comment newComment3 = new Comment("All the cool kids are coding nowadays.");
+    jsonArray.add(newComment1);
+    jsonArray.add(newComment2);
+    jsonArray.add(newComment3);
 
+    String json = convertToJson(jsonArray);
+    response.setContentType("application/json;");
+    response.getWriter().println(json);
   }
 
-  private String convertToJson(ArrayList<String> alist) {
-		String json = "{";
-		
-        if (alist.size() <= 0) {
-            return "";
-        }
-
-		for (int i=0; i<alist.size() - 1; i++) {
-			json += "\"comment" + i + "\": " + "\"" + alist.get(i) + "\"";
-			json += ", ";
-		}
-		
-		int lastidx = alist.size() - 1;
-		json += "\"comment" + lastidx + "\": " + alist.get(lastidx) + "\"";
-		json += "}";
-		return json;
-	}
-
-
-
-  public static String convert(ArrayList<String> alist) {
-		String s = "";
-		for(int i = 0; i<alist.size(); i++) {
-			s += alist.get(i);
-			s += "\n";
-		}
-		return s;
-	}
-
-
+private String convertToJson(ArrayList<Comment> commentsList) {
+	Gson gson = new Gson();
+    String json = gson.toJson(commentsList);
+    return json;
+  }
 
 }
