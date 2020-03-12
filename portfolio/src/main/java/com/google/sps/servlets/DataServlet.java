@@ -13,7 +13,7 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
-
+import com.google.gson.Gson;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -24,18 +24,15 @@ import java.util.ArrayList;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
-    
-    
-
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    ArrayList<String> jsonarray = new ArrayList<String>();
-    jsonarray.add("I love this site.");
-    jsonarray.add("This is so cool.");
-    jsonarray.add("All the cool kids are coding nowadays.");
-    // response.setContentType("text/html;");
-    // response.getWriter().println("Hello Juan!");
+    ArrayList<Comment> jsonarray = new ArrayList<Comment>();
+    Comment newcomment1 = new Comment("I love this site.");
+    Comment newcomment2 = new Comment("This is so cool.");
+    Comment newcomment3 = new Comment("All the cool kids are coding nowadays.");
+    jsonarray.add(newcomment1);
+    jsonarray.add(newcomment2);
+    jsonarray.add(newcomment3);
 
     String json = convertToJson(jsonarray);
     response.setContentType("application/json;");
@@ -43,21 +40,10 @@ public class DataServlet extends HttpServlet {
 
   }
 
-
-  private String convertToJson(ArrayList<String> alist) {
-		String json = "{";
-		
-		for (int i=0; i<alist.size() - 1; i++) {
-			json += "\"comment" + i + "\": " + "\"" + alist.get(i) + "\"";
-			json += ", ";
-		}
-		
-		int lastidx = alist.size() - 1;
-		json += "\"comment" + lastidx + "\": " + alist.get(lastidx) + "\"";
-		json += "}";
-		return json;
-	}
-
-
+  private String convertToJson(ArrayList<Comment> alist) {
+	Gson gson = new Gson();
+    String json = gson.toJson(alist);
+    return json;
+  }
 
 }
