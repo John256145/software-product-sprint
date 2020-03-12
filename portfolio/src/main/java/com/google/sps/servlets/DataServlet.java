@@ -38,6 +38,7 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(json);
 
+
   }
 
   private String convertToJson(ArrayList<Comment> alist) {
