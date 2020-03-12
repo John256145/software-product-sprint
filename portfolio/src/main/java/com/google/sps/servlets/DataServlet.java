@@ -26,24 +26,22 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    ArrayList<Comment> jsonarray = new ArrayList<Comment>();
-    Comment newcomment1 = new Comment("I love this site.");
-    Comment newcomment2 = new Comment("This is so cool.");
-    Comment newcomment3 = new Comment("All the cool kids are coding nowadays.");
-    jsonarray.add(newcomment1);
-    jsonarray.add(newcomment2);
-    jsonarray.add(newcomment3);
+    ArrayList<Comment> jsonArray = new ArrayList<Comment>();
+    Comment newComment1 = new Comment("I love this site.");
+    Comment newComment2 = new Comment("This is so cool.");
+    Comment newComment3 = new Comment("All the cool kids are coding nowadays.");
+    jsonArray.add(newComment1);
+    jsonArray.add(newComment2);
+    jsonArray.add(newComment3);
 
-    String json = convertToJson(jsonarray);
+    String json = convertToJson(jsonArray);
     response.setContentType("application/json;");
     response.getWriter().println(json);
-
-
   }
 
-  private String convertToJson(ArrayList<Comment> alist) {
+  private String convertToJson(ArrayList<Comment> commentsList) {
 	Gson gson = new Gson();
-    String json = gson.toJson(alist);
+    String json = gson.toJson(commentsList);
     return json;
   }
 
