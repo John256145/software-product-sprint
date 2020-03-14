@@ -12,12 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
 function addRandomGreeting() {
   const greetings =
-      ['I am 19 years old.', 'I like to hang out with my friends.', 'I have been coding since I was about 14 years old.', 'I am Hispanic!'];
+      ['I am 19 years old.', 'I like to hang out with my friends.', 'I have been coding since I was about 14 years old.', 'I am Hispanic!', 'I have been in 3 of 4 American time zones!'];
 
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -28,10 +25,20 @@ function addRandomGreeting() {
 }
 
 function addMyComments() {
-  fetch('/data').then(response => response.text()).then((myComment) => {
-    document.getElementById('comments-container').innerText = myComment;
+  fetch('/data').then(response => response.json()).then((myComment) => {
+    
+    const statsListElement = document.getElementById('comments-container');
+    statsListElement.innerHTML = '';
+
+    for( let element in myComment){
+        var node = createListElement(myComment[element].comment);
+        statsListElement.appendChild(node);
+    }
   });
 }
 
-
-
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}

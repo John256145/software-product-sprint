@@ -20,27 +20,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-
+  ArrayList<Comment> jsonArray = new ArrayList<Comment>();
+  
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
-    String text = request.getParameter("text-input");
-    // commentsarray.add(text);
+    String text = request.getParameter("comment-input");
+    if (text.isEmpty() == false) {
+        Comment newComment = new Comment(text);
+        jsonArray.add(newComment);
+    }
     response.sendRedirect("/");
   }
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    ArrayList<Comment> jsonArray = new ArrayList<Comment>();
-    Comment newComment1 = new Comment("I love this site.");
-    Comment newComment2 = new Comment("This is so cool.");
-    Comment newComment3 = new Comment("All the cool kids are coding nowadays.");
-    jsonArray.add(newComment1);
-    jsonArray.add(newComment2);
-    jsonArray.add(newComment3);
-
     String json = convertToJson(jsonArray);
     response.setContentType("application/json;");
     response.getWriter().println(json);
@@ -51,5 +47,4 @@ private String convertToJson(ArrayList<Comment> commentsList) {
     String json = gson.toJson(commentsList);
     return json;
   }
-
 }
