@@ -13,7 +13,7 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
-
+import com.google.gson.Gson;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -23,61 +23,49 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  ArrayList<String> commentsarray = new ArrayList<String>();
+  ArrayList<Comment> jsonArray = new ArrayList<Comment>();
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get the input from the form.
-    String text = request.getParameter("text-input");
+    String text = request.getParameter("comment-input");
 
-    Entity taskEntity = new Entity("Comments");
-    taskEntity.setProperty("Comment", text);
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(taskEntity);
+    //As of right now, comments are stored in jsonArray and datastore
 
-    // commentsarray.add(text);
-    response.sendRedirect("/"); //redirects to main page
+    
+    if (text.isEmpty() == false) {
+        //When retrieval from datastore is implemented, this section of code will change
+        Comment newComment = new Comment(text);
+        jsonArray.add(newComment);
+
+        //sending comment to datastore
+        Entity commentEntity = new Entity("Comments");
+        commentEntity.setProperty("Comment", text);
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        datastore.put(commentEntity);
+    }
+
+    //redirects to main page
+    response.sendRedirect("/index.html"); 
   }
 
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String comments = convert(commentsarray);
-    response.setContentType("application/text;");
-    response.getWriter().println(comments);
+    //retrieval from datastore not yet implemented
+    String json = convertToJson(jsonArray);
+    response.setContentType("application/json;");
+    response.getWriter().println(json);
 
   }
 
-  private String convertToJson(ArrayList<String> alist) {
-		String json = "{";
-		
-        if (alist.size() <= 0) {
-            return "";
-        }
+  private String convertToJson(ArrayList<Comment> commentsList) {
+	Gson gson = new Gson();
+    String json = gson.toJson(commentsList);
+    return json;
+  }
 
-		for (int i=0; i<alist.size() - 1; i++) {
-			json += "\"comment" + i + "\": " + "\"" + alist.get(i) + "\"";
-			json += ", ";
-		}
-		
-		int lastidx = alist.size() - 1;
-		json += "\"comment" + lastidx + "\": " + alist.get(lastidx) + "\"";
-		json += "}";
-		return json;
-	}
-
-
-
-  public static String convert(ArrayList<String> alist) {
-		String s = "";
-		for(int i = 0; i<alist.size(); i++) {
-			s += alist.get(i);
-			s += "\n";
-		}
-		return s;
-	}
 
 
 

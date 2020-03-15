@@ -12,12 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
 function addRandomGreeting() {
   const greetings =
-      ['I am 19 years old.', 'I like to hang out with my friends.', 'I have been coding since I was about 14 years old.', 'I am Hispanic!'];
+      ['I am 19 years old.', 'I like to hang out with my friends.', 'I have been coding since I was about 14 years old.', 'I am Hispanic!', 'I have been in 3 of 4 American time zones!'];
 
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
@@ -27,38 +24,21 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-function addMyGreeting() {
-  console.log('Fetching a greeting.');
+function addMyComments() {
+  fetch('/data').then(response => response.json()).then((myComment) => {
 
-  // The fetch() function returns a Promise because the request is asynchronous.
-  const responsePromise = fetch('/data');
+    const statsListElement = document.getElementById('comments-container');
+    statsListElement.innerHTML = '';
 
-  // When the request is complete, pass the response into handleResponse().
-  responsePromise.then(handleResponse);
+    for( let element in myComment){
+        var node = createListElement(myComment[element].comment);
+        statsListElement.appendChild(node);
+    }
+  });
 }
 
-/**
- * Handles response by converting it to text and passing the result to
- * addHelloToDom().
- */
-function handleResponse(response) {
-  console.log('Handling the response.');
-
-  // response.text() returns a Promise, because the response is a stream of
-  // content and not a simple variable.
-  const textPromise = response.text();
-
-  // When the response is converted to text, pass the result into the
-  // addHelloToDom() function.
-  textPromise.then(addHelloToDom);
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
-
-/** Adds my hello to the DOM. */
-function addHelloToDom(myhello) {
-  console.log('Adding hello to dom: ' + myhello);
-
-  const helloContainer = document.getElementById('my-greeting-container');
-  helloContainer.innerText = myhello;
-}
-
-
