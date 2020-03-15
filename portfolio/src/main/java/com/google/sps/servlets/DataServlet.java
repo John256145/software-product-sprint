@@ -31,10 +31,8 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String text = request.getParameter("comment-input");
-
     //As of right now, comments are stored in jsonArray and datastore
 
-    
     if (text.isEmpty() == false) {
         //When retrieval from datastore is implemented, this section of code will change
         Comment newComment = new Comment(text);
