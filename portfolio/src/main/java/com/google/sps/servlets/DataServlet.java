@@ -13,7 +13,7 @@
 // limitations under the License.
 
 package com.google.sps.servlets;
-
+import com.google.gson.Gson;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -26,82 +26,57 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get the input from the form.
-    String text = request.getParameter("text-input");
+    String text = request.getParameter("comment-input");
+    String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+    String user = "Anonymous";
 
-    Entity taskEntity = new Entity("Comments");
-    
-    if (text != ""){
-        //do not add a comment if it is empty
-        taskEntity.setProperty("Comment", text);
+    if (text.isEmpty() == false) {
+        Entity commentEntity = new Entity("commentsData");
+        commentEntity.setProperty("Comment", text);
+        commentEntity.setProperty("Timestamp", timeStamp);
+        commentEntity.setProperty("User", user);
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        datastore.put(commentEntity);
     }
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(taskEntity);
-
-    // commentsarray.add(text);
-    response.sendRedirect("/"); //redirects to main page
+    //redirects to main page
+    response.sendRedirect("/index.html");
   }
 
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    ArrayList<String> commentsarray = new ArrayList<String>();
-    Query query = new Query("Comments");
+    ArrayList<Comment> jsonArray = new ArrayList<Comment>();
+    Query query = new Query("commentsData");
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
         String comment = (String) entity.getProperty("Comment");
-        
-        if (comment != ""){
-            commentsarray.add(comment);
-        }
-        
-        
+        String timeStamp = (String) entity.getProperty("Timestamp");
+        String user = (String) entity.getProperty("User");
+        Comment newComment = new Comment(comment, user, timeStamp);
+        jsonArray.add(newComment);
     }
 
-    String comments = convert(commentsarray);
-    response.setContentType("application/text;");
-    response.getWriter().println(comments);
-
+    String json = convertToJson(jsonArray);
+    response.setContentType("application/json;");
+    response.getWriter().println(json);
   }
 
-  private String convertToJson(ArrayList<String> alist) {
-		String json = "{";
-		
-        if (alist.size() <= 0) {
-            return "";
-        }
-
-		for (int i=0; i<alist.size() - 1; i++) {
-			json += "\"comment" + i + "\": " + "\"" + alist.get(i) + "\"";
-			json += ", ";
-		}
-		
-		int lastidx = alist.size() - 1;
-		json += "\"comment" + lastidx + "\": " + alist.get(lastidx) + "\"";
-		json += "}";
-		return json;
-	}
-
-
-
-  public static String convert(ArrayList<String> alist) {
-		String s = "";
-		for(int i = 0; i<alist.size(); i++) {
-			s += alist.get(i);
-			s += "\n";
-		}
-		return s;
-	}
-
+  private String convertToJson(ArrayList<Comment> commentsList) {
+    Gson gson = new Gson();
+    String json = gson.toJson(commentsList);
+    return json;
+  }
 
 
 }
