@@ -42,7 +42,7 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(json);
   }
-
+ 
 private String convertToJson(ArrayList<Comment> commentsList) {
 	Gson gson = new Gson();
     String json = gson.toJson(commentsList);
