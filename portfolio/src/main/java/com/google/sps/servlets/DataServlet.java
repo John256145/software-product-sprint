@@ -36,6 +36,7 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("/");
   }
 
+  @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String json = convertToJson(jsonArray);
     response.setContentType("application/json;");
