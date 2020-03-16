@@ -14,23 +14,27 @@
 
 package com.google.sps.servlets;
 import com.google.gson.Gson;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
+
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -52,7 +56,7 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
-
+  @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     ArrayList<Comment> jsonArray = new ArrayList<Comment>();
     Query query = new Query("commentsData");
@@ -80,3 +84,4 @@ public class DataServlet extends HttpServlet {
 
 
 }
+
