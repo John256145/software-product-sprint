@@ -26,13 +26,14 @@ function addRandomGreeting() {
 
 function addMyComments() {
   fetch('/data').then(response => response.json()).then((myComment) => {
-    
+
     const commentsListElement = document.getElementById('comments-container');
     commentsListElement.innerHTML = '';
 
     for( let element in myComment){
         var node = createListElement(myComment[element].comment);
         commentsListElement.appendChild(node);
+
     }
   });
 }
