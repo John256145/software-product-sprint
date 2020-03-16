@@ -1,14 +1,15 @@
 package com.google.sps.servlets;
 public class Comment {
-	
-    String user = "Anonymous";
+
+  //When user authenticaton is implemented, this will change.
+  String user = "Anonymous";
 	String comment = "";
-	
+
+
 
 	public Comment(String comment) {
 		this.comment = comment;
 	}
-	
 	public String getComment() {
 		return comment;
 	}
@@ -16,6 +17,4 @@ public class Comment {
     public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-	
 }

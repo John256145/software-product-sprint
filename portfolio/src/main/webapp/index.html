@@ -16,9 +16,6 @@
       <button onclick="addRandomGreeting()">Hello</button>
       <div id="greeting-container"></div>
 
-      <p>Here is some comment data!:</p>
-      <div id="comments-container"></div>
-
       <p>Here is a picture I took in my neighborhood.</p>
       <img src="/images/bridge.jpg" alt="Bridge" height="360" width="640">
         <br>
@@ -28,6 +25,19 @@
       </div>
 
       <p>Finally, feel free to check out my <a href="https://www.linkedin.com/in/juangonzalez256/">LinkedIn</a> and <a href="https://github.com/John256145">GitHub</a> accounts. Don't be afraid to send a connection request!</p>
+
+      <form action="/data" method="POST">
+      <p>Leave a comment here:</p>
+      <textarea name="comment-input"></textarea>
+      <br/><br/>
+
+      <input type="submit" />
+    </form>
+
+
+      <p>Comments:</p>
+      <div id="comments-container"></div>
+
     </div>
   </body>
 </html>
