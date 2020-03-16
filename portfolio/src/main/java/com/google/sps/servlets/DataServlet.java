@@ -14,9 +14,11 @@
 
 package com.google.sps.servlets;
 import com.google.gson.Gson;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   ArrayList<Comment> jsonArray = new ArrayList<Comment>();
+
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -49,7 +52,7 @@ public class DataServlet extends HttpServlet {
     response.sendRedirect("/index.html"); 
   }
 
-
+  @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     //retrieval from datastore not yet implemented
     String json = convertToJson(jsonArray);
@@ -59,12 +62,9 @@ public class DataServlet extends HttpServlet {
   }
 
   private String convertToJson(ArrayList<Comment> commentsList) {
+
 	Gson gson = new Gson();
     String json = gson.toJson(commentsList);
     return json;
   }
-
-
-
-
 }
