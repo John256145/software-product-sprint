@@ -24,6 +24,12 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
+function addMyCode() {
+    addMyComments();
+    login();
+    console.log("success");
+}
+
 function addMyComments() {
   fetch('/data').then(response => response.json()).then((myComment) => {
 
@@ -31,10 +37,17 @@ function addMyComments() {
     commentsListElement.innerHTML = '';
 
     for( let element in myComment){
-        var node = createListElement(myComment[element].comment);
+        var userandcomment = myComment[element].userEmail +": " + myComment[element].comment;
+        var node = createListElement(userandcomment);
         commentsListElement.appendChild(node);
 
     }
+  });
+}
+
+function login() {
+    fetch('/loginData').then(response => response.text()).then((quote) => {
+    document.getElementById('login-container').innerHTML = quote;
   });
 }
 
