@@ -1,20 +1,18 @@
 package com.google.sps.servlets;
 public class Comment {
 
-
-    String user = "";
-	  String comment = "";
+    String userEmail = "";
+	String comment = "";
     String timestamp = "";
-
 
 	public Comment(String comment) {
 		this.comment = comment;
 	}
 
-    public Comment(String comment, String user, String timestamp){
+    public Comment(String comment, String userEmail, String timestamp){
         this.comment = comment;
         this.timestamp = timestamp;
-        this.user = user;
+        this.userEmail = userEmail;
     }
 
 	public String getComment() {
@@ -26,8 +24,8 @@ public class Comment {
         return timestamp;
     }
 
-    public String getUser() {
-        return user;
+    public String getUserEmail() {
+        return userEmail;
     }
 
     public void setComment(String comment) {
@@ -38,8 +36,8 @@ public class Comment {
         this.timestamp = timestamp;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
 }

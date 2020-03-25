@@ -29,21 +29,27 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String text = request.getParameter("comment-input");
-    String timeStamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
-    String user = "Anonymous";
+    final String COMMENT_INPUT_PARAMETER_NAME = "comment-input";
+    String comment = request.getParameter(COMMENT_INPUT_PARAMETER_NAME);
 
-    if (text.isEmpty() == false) {
-        Entity commentEntity = new Entity("commentsData");
-        commentEntity.setProperty("Comment", text);
-        commentEntity.setProperty("Timestamp", timeStamp);
-        commentEntity.setProperty("User", user);
+    String timestamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
+
+    UserService userService = UserServiceFactory.getUserService();
+    String userEmail = userService.getCurrentUser().getEmail();
+
+    if (!comment.isEmpty()) {
+        Entity commentEntity = new Entity("Comments");
+        commentEntity.setProperty("User_Comment", comment);
+        commentEntity.setProperty("Timestamp", timestamp);
+        commentEntity.setProperty("User_Email", userEmail);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         datastore.put(commentEntity);
     }
@@ -54,19 +60,19 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    ArrayList<Comment> jsonArray = new ArrayList<Comment>();
-    Query query = new Query("commentsData");
+    ArrayList<Comment> commentsList = new ArrayList<Comment>();
+    Query query = new Query("Comments");
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
-        String comment = (String) entity.getProperty("Comment");
-        String timeStamp = (String) entity.getProperty("Timestamp");
-        String user = (String) entity.getProperty("User");
-        Comment newComment = new Comment(comment, user, timeStamp);
-        jsonArray.add(newComment);
+        String comment = (String) entity.getProperty("User_Comment");
+        String timestamp = (String) entity.getProperty("Timestamp");
+        String userEmail = (String) entity.getProperty("User_Email");
+        Comment newComment = new Comment(comment, userEmail, timestamp);
+        commentsList.add(newComment);
     }
-    String json = convertToJson(jsonArray);
+    String json = convertToJson(commentsList);
     response.setContentType("application/json;");
     response.getWriter().println(json);
 
