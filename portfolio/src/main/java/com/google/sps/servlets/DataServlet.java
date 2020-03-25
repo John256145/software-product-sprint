@@ -37,15 +37,17 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    final String COMMENT_INPUT_PARAMETER_NAME = request.getParameter("comment-input");
+    final String COMMENT_INPUT_PARAMETER_NAME = "comment-input";
+    String comment = request.getParameter(COMMENT_INPUT_PARAMETER_NAME);
+
     String timestamp = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(new Date());
 
     UserService userService = UserServiceFactory.getUserService();
     String userEmail = userService.getCurrentUser().getEmail();
 
-    if (!COMMENT_INPUT_PARAMETER_NAME.isEmpty()) {
+    if (!comment.isEmpty()) {
         Entity commentEntity = new Entity("Comments");
-        commentEntity.setProperty("User_Comment", COMMENT_INPUT_PARAMETER_NAME);
+        commentEntity.setProperty("User_Comment", comment);
         commentEntity.setProperty("Timestamp", timestamp);
         commentEntity.setProperty("User_Email", userEmail);
         DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

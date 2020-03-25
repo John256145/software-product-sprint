@@ -27,7 +27,6 @@ function addRandomGreeting() {
 function addMyCode() {
     addMyComments();
     login();
-    console.log("success");
 }
 
 function addMyComments() {

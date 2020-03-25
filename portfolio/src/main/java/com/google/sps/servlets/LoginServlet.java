@@ -51,13 +51,5 @@ public class LoginServlet extends HttpServlet {
       response.getWriter().println("<p>Log in below to add a comment!</p>");
       response.getWriter().println("<a href = \"" + loginUrl + "\" target = \"_self\"> <img src = \"/images/signinblue.png\" alt = \"Login\" height=\"46\" width=\"191\" border = \"0\"/> </a>");
     }
-
   }
-
-//   @Override
-//   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-//   }
-
 }
-
